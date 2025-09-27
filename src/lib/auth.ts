@@ -21,11 +21,9 @@ export const authOptions: NextAuthOptions = {
         try {
           await connectDB();
           
-          // Сначала пробуем локальную аутентификацию
           const user = await User.findOne({ misisLogin: credentials.login });
           
           if (user && user.password) {
-            // Проверяем сохраненный пароль
             const isPasswordValid = await user.comparePassword(credentials.password);
             if (isPasswordValid) {
               return {
@@ -37,7 +35,6 @@ export const authOptions: NextAuthOptions = {
             }
           }
 
-          // Если локальная аутентификация не удалась, проверяем через MISIS
           const isValid = await misisClient.validateCredentials(
             credentials.login,
             credentials.password
@@ -47,33 +44,29 @@ export const authOptions: NextAuthOptions = {
             return null;
           }
 
-          // Получаем информацию о студенте
           const misisData = await misisClient.getStudentInfo(
             credentials.login,
             credentials.password
           );
 
-          // Ищем или создаем пользователя
           let userToSave = await User.findOne({ misisLogin: credentials.login });
           
           if (!userToSave) {
             userToSave = new User({
               email: misisData.personalEmail || `${credentials.login}@misis.ru`,
               misisLogin: credentials.login,
-              password: credentials.password, // Исходный пароль для MISIS API
+              password: credentials.password,
               misisData,
             });
             await userToSave.save();
             
-            // Создаем настройки по умолчанию для нового пользователя
             const userSettings = new UserSettings({ 
               userId: userToSave._id.toString() 
             });
             await userSettings.save();
           } else {
-            // Обновляем данные MISIS и пароль
             userToSave.misisData = misisData;
-            userToSave.password = credentials.password; // Исходный пароль
+            userToSave.password = credentials.password;
             await userToSave.save();
           }
 
