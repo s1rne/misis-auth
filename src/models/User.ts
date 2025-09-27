@@ -1,5 +1,4 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
   _id: string;
@@ -39,7 +38,7 @@ const UserSchema = new Schema<IUser>({
   },
   password: {
     type: String,
-    required: false, // Для OAuth пользователей пароль не обязателен
+    required: false, // Исходный пароль для работы с MISIS API
   },
   misisLogin: {
     type: String,
@@ -77,27 +76,18 @@ const UserSchema = new Schema<IUser>({
 // UserSchema.index({ misisLogin: 1 });
 UserSchema.index({ isActive: 1 });
 
-// Middleware для хеширования пароля
-UserSchema.pre('save', async function(next) {
-  if (!this.isModified('password') || !this.password) {
-    return next();
-  }
-
-  try {
-    const salt = await bcrypt.genSalt(12);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error as Error);
-  }
-});
-
-// Метод для сравнения паролей
+// Метод для сравнения паролей (простое сравнение строк)
 UserSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
   if (!this.password) {
     return false;
   }
-  return bcrypt.compare(candidatePassword, this.password);
+  return this.password === candidatePassword;
 };
 
+// Очищаем кэш модели, чтобы убрать старые middleware
+// if (mongoose.models.User) {
+//   delete mongoose.models.User;
+// }
+
+// export default mongoose.model<IUser>('User', UserSchema);
 export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

@@ -20,7 +20,23 @@ export const authOptions: NextAuthOptions = {
         try {
           await connectDB();
           
-          // Проверяем учетные данные через MISIS
+          // Сначала пробуем локальную аутентификацию
+          const user = await User.findOne({ misisLogin: credentials.login });
+          
+          if (user && user.password) {
+            // Проверяем сохраненный пароль
+            const isPasswordValid = await user.comparePassword(credentials.password);
+            if (isPasswordValid) {
+              return {
+                id: user._id.toString(),
+                email: user.email,
+                name: user.misisData?.fullName || user.misisLogin,
+                misisLogin: user.misisLogin,
+              };
+            }
+          }
+
+          // Если локальная аутентификация не удалась, проверяем через MISIS
           const isValid = await misisClient.validateCredentials(
             credentials.login,
             credentials.password
@@ -37,26 +53,28 @@ export const authOptions: NextAuthOptions = {
           );
 
           // Ищем или создаем пользователя
-          let user = await User.findOne({ misisLogin: credentials.login });
+          let userToSave = await User.findOne({ misisLogin: credentials.login });
           
-          if (!user) {
-            user = new User({
+          if (!userToSave) {
+            userToSave = new User({
               email: misisData.personalEmail || `${credentials.login}@misis.ru`,
               misisLogin: credentials.login,
+              password: credentials.password, // Исходный пароль для MISIS API
               misisData,
             });
-            await user.save();
+            await userToSave.save();
           } else {
-            // Обновляем данные MISIS
-            user.misisData = misisData;
-            await user.save();
+            // Обновляем данные MISIS и пароль
+            userToSave.misisData = misisData;
+            userToSave.password = credentials.password; // Исходный пароль
+            await userToSave.save();
           }
 
           return {
-            id: user._id.toString(),
-            email: user.email,
+            id: userToSave._id.toString(),
+            email: userToSave.email,
             name: misisData.fullName,
-            misisLogin: user.misisLogin,
+            misisLogin: userToSave.misisLogin,
           };
         } catch (error) {
           console.error('Auth error:', error);
