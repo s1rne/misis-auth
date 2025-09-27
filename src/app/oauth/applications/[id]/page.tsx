@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { DeleteConfirmationDialog } from '@/components/delete-confirmation-dialog';
 import { 
   ArrowLeft, 
   Copy, 
@@ -97,9 +98,7 @@ export default function ApplicationDetails() {
   };
 
   const handleDelete = () => {
-    if (confirm('Вы уверены, что хотите удалить это приложение?')) {
-      deleteMutation.mutate({ id: application.id });
-    }
+    deleteMutation.mutate({ id: application.id });
   };
 
   return (
@@ -109,8 +108,8 @@ export default function ApplicationDetails() {
       <div className="flex">
         <Sidebar />
         
-        <main className="flex-1 p-6">
-          <div className="max-w-6xl mx-auto space-y-6">
+        <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
+          <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
             {/* Header */}
             <div className="flex items-center gap-4">
               <Button variant="outline" size="sm" asChild>
@@ -242,38 +241,69 @@ export default function ApplicationDetails() {
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
                       <Label>1. Authorization URL</Label>
-                      <div className="p-3 bg-muted rounded-lg">
-                        <code className="text-sm font-mono break-all">
-                          {typeof window !== 'undefined' && `${window.location.origin}/api/oauth/authorize?client_id=${application.clientId}&redirect_uri=${encodeURIComponent(application.redirectUris[0])}&response_type=code&scope=${application.scopes.join(' ')}&state=random_state`}
-                        </code>
+                      <div className="relative">
+                        <pre className="bg-muted p-4 pr-12 rounded-lg text-sm overflow-x-auto whitespace-pre-wrap break-all">
+                          <code>{typeof window !== 'undefined' && `${window.location.origin}/api/oauth/authorize?client_id=${application.clientId}&redirect_uri=${encodeURIComponent(application.redirectUris[0])}&response_type=code&scope=${application.scopes.join(' ')}&state=random_state`}</code>
+                        </pre>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="absolute top-2 right-2 h-8 w-8 p-0"
+                          onClick={() => copyToClipboard(
+                            typeof window !== 'undefined' ? `${window.location.origin}/api/oauth/authorize?client_id=${application.clientId}&redirect_uri=${encodeURIComponent(application.redirectUris[0])}&response_type=code&scope=${application.scopes.join(' ')}&state=random_state` : '',
+                            'Authorization URL'
+                          )}
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
 
                     <div className="space-y-2">
                       <Label>2. Exchange Code for Token</Label>
-                      <div className="p-3 bg-muted rounded-lg">
-                        <div className="text-sm font-mono">
-                          <div className="font-semibold">POST /api/oauth/token</div>
-                          <div className="mt-2 text-muted-foreground">
-                            grant_type=authorization_code<br/>
-                            client_id={application.clientId}<br/>
-                            client_secret={application.clientSecret}<br/>
-                            code=authorization_code<br/>
-                            redirect_uri={application.redirectUris[0]}
-                          </div>
-                        </div>
+                      <div className="relative">
+                        <pre className="bg-muted p-4 pr-12 rounded-lg text-sm overflow-x-auto whitespace-pre-wrap break-all">
+                          <code>{`POST /api/oauth/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code
+client_id=${application.clientId}
+client_secret=${application.clientSecret}
+code=authorization_code
+redirect_uri=${application.redirectUris[0]}`}</code>
+                        </pre>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="absolute top-2 right-2 h-8 w-8 p-0"
+                          onClick={() => copyToClipboard(
+                            `POST /api/oauth/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=authorization_code\nclient_id=${application.clientId}\nclient_secret=${application.clientSecret}\ncode=authorization_code\nredirect_uri=${application.redirectUris[0]}`,
+                            'Token Request'
+                          )}
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
 
                     <div className="space-y-2">
                       <Label>3. Use Access Token</Label>
-                      <div className="p-3 bg-muted rounded-lg">
-                        <div className="text-sm font-mono">
-                          <div className="font-semibold">GET /api/v1/user</div>
-                          <div className="mt-2 text-muted-foreground">
-                            Authorization: Bearer access_token
-                          </div>
-                        </div>
+                      <div className="relative">
+                        <pre className="bg-muted p-4 pr-12 rounded-lg text-sm overflow-x-auto whitespace-pre-wrap break-all">
+                          <code>{`GET /api/v1/user
+Authorization: Bearer access_token`}</code>
+                        </pre>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="absolute top-2 right-2 h-8 w-8 p-0"
+                          onClick={() => copyToClipboard(
+                            'GET /api/v1/user\nAuthorization: Bearer access_token',
+                            'API Request'
+                          )}
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
@@ -302,14 +332,14 @@ export default function ApplicationDetails() {
                       }
                     </Button>
 
-                    <Button
-                      onClick={handleDelete}
-                      disabled={deleteMutation.isPending}
-                      variant="destructive"
+                    <DeleteConfirmationDialog
+                      title="Удалить приложение"
+                      description={`Вы уверены, что хотите удалить приложение "${application.name}"? Это действие нельзя отменить. Все связанные токены доступа будут аннулированы.`}
+                      onConfirm={handleDelete}
+                      triggerText="Удалить приложение"
+                      isPending={deleteMutation.isPending}
                       className="w-full"
-                    >
-                      {deleteMutation.isPending ? 'Удаление...' : 'Удалить приложение'}
-                    </Button>
+                    />
                   </CardContent>
                 </Card>
 

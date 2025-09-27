@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { CreateApplicationButton } from '@/components/create-application-button';
 import { 
   Key, 
   Plus, 
@@ -227,12 +228,9 @@ export default function Home() {
                         Управляйте вашими приложениями для авторизации
                       </CardDescription>
                     </div>
-                    <Button asChild className="w-full sm:w-auto">
-                      <Link href="/oauth/applications/new">
-                        <Plus className="mr-2 h-4 w-4" />
-                        Создать
-                      </Link>
-                    </Button>
+                    <CreateApplicationButton className="w-full sm:w-auto">
+                      Создать
+                    </CreateApplicationButton>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -312,12 +310,9 @@ function OAuthApplicationsList({
         <p className="mt-2 text-sm text-muted-foreground">
           Создайте ваше первое OAuth приложение для начала работы
         </p>
-        <Button asChild className="mt-4">
-          <Link href="/oauth/applications/new">
-            <Plus className="mr-2 h-4 w-4" />
-            Создать приложение
-          </Link>
-        </Button>
+        <CreateApplicationButton className="mt-4">
+          Создать приложение
+        </CreateApplicationButton>
       </div>
     );
   }
