@@ -45,7 +45,7 @@ export default function Home() {
           />
         </DevelopmentRibbon>
         
-        <DevelopmentRibbon variant="development">
+        <DevelopmentRibbon variant="comingSoon">
           <StatsCard
             title="API Запросы"
             value="-"
