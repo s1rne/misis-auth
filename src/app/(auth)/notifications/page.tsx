@@ -115,7 +115,7 @@ export default function NotificationsPage() {
                     </Badge>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">
-                    Приложение "Test App" было успешно создано
+                    Приложение &quot;Test App&quot; было успешно создано
                   </p>
                 </div>
                 <div className="flex-shrink-0">
