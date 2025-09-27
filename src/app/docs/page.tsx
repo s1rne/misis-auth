@@ -30,7 +30,7 @@ export default function DocsPage() {
   };
 
   const codeExamples = {
-    authUrl: `${typeof window !== 'undefined' ? window.location.origin : 'https://your-domain.com'}/api/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=https://your-app.com/callback&response_type=code&scope=read profile&state=random_state`,
+    authUrl: `${typeof window !== 'undefined' ? window.location.origin : 'https://your-domain.com'}/api/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=https://your-app.com/callback&response_type=code&scope=read+profile&state=random_state`,
     tokenRequest: `POST /api/oauth/token
 Content-Type: application/x-www-form-urlencoded
 
@@ -56,7 +56,7 @@ Content-Type: application/json
       <div className="flex">
         <Sidebar />
         
-        <main className="flex-1 p-4 md:p-6">
+        <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
           <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
             {/* Header */}
             <div className="space-y-2">
@@ -173,13 +173,13 @@ Content-Type: application/json
                     Перенаправьте пользователя на наш authorization endpoint с необходимыми параметрами.
                   </p>
                   <div className="relative">
-                    <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto">
+                    <pre className="bg-muted p-4 pr-12 rounded-lg text-sm overflow-x-auto whitespace-pre-wrap break-all">
                       <code>{codeExamples.authUrl}</code>
                     </pre>
                     <Button
                       size="sm"
                       variant="outline"
-                      className="absolute top-2 right-2"
+                      className="absolute top-2 right-2 h-8 w-8 p-0"
                       onClick={() => copyToClipboard(codeExamples.authUrl, 'authUrl')}
                     >
                       {copiedCode === 'authUrl' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -200,13 +200,13 @@ Content-Type: application/json
                     Обменяйте этот код на access token.
                   </p>
                   <div className="relative">
-                    <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto">
+                    <pre className="bg-muted p-4 pr-12 rounded-lg text-sm overflow-x-auto whitespace-pre-wrap break-all">
                       <code>{codeExamples.tokenRequest}</code>
                     </pre>
                     <Button
                       size="sm"
                       variant="outline"
-                      className="absolute top-2 right-2"
+                      className="absolute top-2 right-2 h-8 w-8 p-0"
                       onClick={() => copyToClipboard(codeExamples.tokenRequest, 'tokenRequest')}
                     >
                       {copiedCode === 'tokenRequest' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -226,13 +226,13 @@ Content-Type: application/json
                     Используйте полученный access token для доступа к API пользователя.
                   </p>
                   <div className="relative">
-                    <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto">
+                    <pre className="bg-muted p-4 pr-12 rounded-lg text-sm overflow-x-auto whitespace-pre-wrap break-all">
                       <code>{codeExamples.userInfo}</code>
                     </pre>
                     <Button
                       size="sm"
                       variant="outline"
-                      className="absolute top-2 right-2"
+                      className="absolute top-2 right-2 h-8 w-8 p-0"
                       onClick={() => copyToClipboard(codeExamples.userInfo, 'userInfo')}
                     >
                       {copiedCode === 'userInfo' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -257,7 +257,7 @@ Content-Type: application/json
                       <div className="font-medium">Authorization</div>
                       <div className="text-sm text-muted-foreground">Начало OAuth flow</div>
                     </div>
-                    <Badge variant="outline" className="w-fit">GET /api/oauth/authorize</Badge>
+                    <Badge variant="outline" className="w-fit text-xs">GET /api/oauth/authorize</Badge>
                   </div>
                   
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border rounded-lg gap-2">
@@ -265,7 +265,7 @@ Content-Type: application/json
                       <div className="font-medium">Token</div>
                       <div className="text-sm text-muted-foreground">Обмен кода на токен</div>
                     </div>
-                    <Badge variant="outline" className="w-fit">POST /api/oauth/token</Badge>
+                    <Badge variant="outline" className="w-fit text-xs">POST /api/oauth/token</Badge>
                   </div>
                   
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border rounded-lg gap-2">
@@ -273,7 +273,7 @@ Content-Type: application/json
                       <div className="font-medium">User Info</div>
                       <div className="text-sm text-muted-foreground">Информация о пользователе</div>
                     </div>
-                    <Badge variant="outline" className="w-fit">GET /api/v1/user</Badge>
+                    <Badge variant="outline" className="w-fit text-xs">GET /api/v1/user</Badge>
                   </div>
                   
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border rounded-lg gap-2">
@@ -281,7 +281,7 @@ Content-Type: application/json
                       <div className="font-medium">Profile</div>
                       <div className="text-sm text-muted-foreground">Полный профиль пользователя</div>
                     </div>
-                    <Badge variant="outline" className="w-fit">GET /api/v1/user/profile</Badge>
+                    <Badge variant="outline" className="w-fit text-xs">GET /api/v1/user/profile</Badge>
                   </div>
                   
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border rounded-lg gap-2">
@@ -289,7 +289,7 @@ Content-Type: application/json
                       <div className="font-medium">Token Validation</div>
                       <div className="text-sm text-muted-foreground">Проверка токена</div>
                     </div>
-                    <Badge variant="outline" className="w-fit">POST /api/v1/token/validate</Badge>
+                    <Badge variant="outline" className="w-fit text-xs">POST /api/v1/token/validate</Badge>
                   </div>
                 </div>
               </CardContent>
