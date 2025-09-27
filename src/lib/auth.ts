@@ -2,6 +2,7 @@ import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { misisClient } from '@/lib/misis-client';
 import User from '@/models/User';
+import UserSettings from '@/models/UserSettings';
 import connectDB from '@/lib/mongodb';
 
 export const authOptions: NextAuthOptions = {
@@ -63,6 +64,12 @@ export const authOptions: NextAuthOptions = {
               misisData,
             });
             await userToSave.save();
+            
+            // Создаем настройки по умолчанию для нового пользователя
+            const userSettings = new UserSettings({ 
+              userId: userToSave._id.toString() 
+            });
+            await userSettings.save();
           } else {
             // Обновляем данные MISIS и пароль
             userToSave.misisData = misisData;

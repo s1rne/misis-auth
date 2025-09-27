@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
-import OAuthApplication, { IOAuthApplication } from '@/models/OAuthApplication';
-import OAuthCode from '@/models/OAuthCode';
-import OAuthToken from '@/models/OAuthToken';
+import Application, { IApplication } from '@/models/Application';
+import AuthCode from '@/models/AuthCode';
+import AccessToken from '@/models/AccessToken';
 import User from '@/models/User';
 import connectDB from '@/lib/mongodb';
 
@@ -12,7 +12,7 @@ export interface OAuthError {
   error_uri?: string;
 }
 
-export interface OAuthTokenResponse {
+export interface AccessTokenResponse {
   access_token: string;
   token_type: string;
   expires_in: number;
@@ -82,7 +82,7 @@ export class OAuthServer {
   // Получение OAuth приложения
   static async getApplication(clientId: string): Promise<any | null> {
     await connectDB();
-    return await OAuthApplication.findOne({ clientId, isActive: true });
+    return await Application.findOne({ clientId, isActive: true });
   }
 
   // Валидация redirect URI
@@ -107,7 +107,7 @@ export class OAuthServer {
   ): Promise<string> {
     await connectDB();
 
-    const code = new OAuthCode({
+    const code = new AuthCode({
       code: this.generateAuthCode(),
       userId,
       clientId,
@@ -131,10 +131,10 @@ export class OAuthServer {
     code: string,
     clientId: string,
     redirectUri: string
-  ): Promise<OAuthTokenResponse | OAuthError> {
+  ): Promise<AccessTokenResponse | OAuthError> {
     await connectDB();
 
-    const authCode = await OAuthCode.findOne({
+    const authCode = await AuthCode.findOne({
       code,
       clientId,
       redirectUri,
@@ -155,7 +155,7 @@ export class OAuthServer {
     const refreshToken = this.generateRefreshToken(authCode.userId, clientId, authCode.scopes);
 
     // Сохраняем токены в базе
-    const token = new OAuthToken({
+    const token = new AccessToken({
       accessToken,
       refreshToken,
       expiresAt: new Date(Date.now() + this.ACCESS_TOKEN_EXPIRES_IN * 1000),
@@ -179,10 +179,10 @@ export class OAuthServer {
   static async refreshAccessToken(
     refreshToken: string,
     clientId: string
-  ): Promise<OAuthTokenResponse | OAuthError> {
+  ): Promise<AccessTokenResponse | OAuthError> {
     await connectDB();
 
-    const token = await OAuthToken.findOne({
+    const token = await AccessToken.findOne({
       refreshToken,
       clientId,
       isRevoked: false,
@@ -226,7 +226,7 @@ export class OAuthServer {
       }
 
       // Проверяем, что токен не отозван в базе
-      const token = await OAuthToken.findOne({
+      const token = await AccessToken.findOne({
         accessToken,
         isRevoked: false,
         expiresAt: { $gt: new Date() },

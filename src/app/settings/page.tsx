@@ -40,12 +40,12 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-      
-      <div className="flex">
-        <Sidebar />
+        <Header />
         
-        <main className="flex-1 p-4 md:p-6">
+        <div className="flex">
+          <Sidebar />
+          
+          <main className="flex-1 p-4 md:p-6">
           <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
             {/* Header */}
             <div className="space-y-2">

@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 
 export default function ApplicationsPage() {
   const { data: applications, isLoading } = trpc.oauth.getMyApplications.useQuery();
+  const { data: userSettings } = trpc.oauth.getUserSettings.useQuery();
   const utils = trpc.useUtils();
   
   const updateMutation = trpc.oauth.updateApplication.useMutation({
@@ -56,15 +57,39 @@ export default function ApplicationsPage() {
                 </h1>
                 <p className="text-muted-foreground">
                   Управляйте вашими приложениями для авторизации
+                  {userSettings && (
+                    <span className="block text-sm mt-1">
+                      Использовано: {applications?.length || 0} / {userSettings.maxApplications} приложений
+                    </span>
+                  )}
                 </p>
               </div>
-              <Button asChild className="w-full sm:w-auto">
+              <Button 
+                asChild 
+                className="w-full sm:w-auto"
+                disabled={userSettings && applications && applications.length >= userSettings.maxApplications}
+              >
                 <Link href="/oauth/applications/new">
                   <Plus className="mr-2 h-4 w-4" />
                   Создать приложение
                 </Link>
               </Button>
             </div>
+
+            {/* Лимит приложений предупреждение */}
+            {userSettings && applications && applications.length >= userSettings.maxApplications && (
+              <Card className="border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950">
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2 text-yellow-800 dark:text-yellow-200">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <p className="text-sm font-medium">
+                      Вы достигли лимита приложений ({userSettings.maxApplications}). 
+                      Удалите неиспользуемые приложения или обратитесь к администратору для увеличения лимита.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Filters */}
             <Card>

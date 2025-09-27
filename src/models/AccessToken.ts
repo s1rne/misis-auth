@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface IOAuthToken extends Document {
+export interface IAccessToken extends Document {
   _id: string;
   accessToken: string;
   refreshToken?: string;
@@ -14,7 +14,7 @@ export interface IOAuthToken extends Document {
   updatedAt: Date;
 }
 
-const OAuthTokenSchema = new Schema<IOAuthToken>({
+const AccessTokenSchema = new Schema<IAccessToken>({
   accessToken: {
     type: String,
     required: true,
@@ -45,7 +45,7 @@ const OAuthTokenSchema = new Schema<IOAuthToken>({
   clientId: {
     type: String,
     required: true,
-    ref: 'OAuthApplication',
+    ref: 'Application',
   },
   isRevoked: {
     type: Boolean,
@@ -56,20 +56,20 @@ const OAuthTokenSchema = new Schema<IOAuthToken>({
 });
 
 // Индексы для быстрого поиска
-// OAuthTokenSchema.index({ accessToken: 1 }); // unique: true уже создает индекс
-// OAuthTokenSchema.index({ refreshToken: 1 }); // unique: true уже создает индекс
-OAuthTokenSchema.index({ userId: 1 });
-OAuthTokenSchema.index({ clientId: 1 });
-// OAuthTokenSchema.index({ isRevoked: 1 });
+// AccessTokenSchema.index({ accessToken: 1 }); // unique: true уже создает индекс
+// AccessTokenSchema.index({ refreshToken: 1 }); // unique: true уже создает индекс
+AccessTokenSchema.index({ userId: 1 });
+AccessTokenSchema.index({ clientId: 1 });
+// AccessTokenSchema.index({ isRevoked: 1 });
 
 // TTL индекс для автоматического удаления истекших токенов
-OAuthTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+AccessTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 // Токены генерируются в OAuthServer, middleware удален
 
 // Очищаем кэш модели, чтобы убрать старые middleware
-if (mongoose.models.OAuthToken) {
-  delete mongoose.models.OAuthToken;
-}
+// if (mongoose.models.AccessToken) {
+//   delete mongoose.models.AccessToken;
+// }
 
-export default mongoose.model<IOAuthToken>('OAuthToken', OAuthTokenSchema);
+export default mongoose.model<IAccessToken>('AccessToken', AccessTokenSchema);

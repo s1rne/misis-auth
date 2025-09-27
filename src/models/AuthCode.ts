@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface IOAuthCode extends Document {
+export interface IAuthCode extends Document {
   _id: string;
   code: string;
   userId: string;
@@ -12,7 +12,7 @@ export interface IOAuthCode extends Document {
   createdAt: Date;
 }
 
-const OAuthCodeSchema = new Schema<IOAuthCode>({
+const AuthCodeSchema = new Schema<IAuthCode>({
   code: {
     type: String,
     required: true,
@@ -26,7 +26,7 @@ const OAuthCodeSchema = new Schema<IOAuthCode>({
   clientId: {
     type: String,
     required: true,
-    ref: 'OAuthApplication',
+    ref: 'Application',
   },
   redirectUri: {
     type: String,
@@ -49,12 +49,12 @@ const OAuthCodeSchema = new Schema<IOAuthCode>({
 });
 
 // Индексы
-OAuthCodeSchema.index({ userId: 1 });
-OAuthCodeSchema.index({ clientId: 1 });
-OAuthCodeSchema.index({ isUsed: 1 });
+AuthCodeSchema.index({ userId: 1 });
+AuthCodeSchema.index({ clientId: 1 });
+AuthCodeSchema.index({ isUsed: 1 });
 
 // TTL индекс для автоматического удаления истекших кодов
-OAuthCodeSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+AuthCodeSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 
-export default mongoose.models.OAuthCode || mongoose.model<IOAuthCode>('OAuthCode', OAuthCodeSchema);
+export default mongoose.models.AuthCode || mongoose.model<IAuthCode>('AuthCode', AuthCodeSchema);

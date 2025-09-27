@@ -359,9 +359,15 @@ Content-Type: application/json
               <CardContent>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button variant="outline" asChild className="w-full sm:w-auto">
-                    <a href="mailto:support@misis-auth.com">
+                    <a href="mailto:m2501350@edu.misis.ru">
                       <ExternalLink className="mr-2 h-4 w-4" />
                       Написать в поддержку
+                    </a>
+                  </Button>
+                  <Button variant="outline" asChild className="w-full sm:w-auto">
+                    <a href="https://t.me/s1rne" target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      Telegram поддержка
                     </a>
                   </Button>
                   <Button variant="outline" asChild className="w-full sm:w-auto">
