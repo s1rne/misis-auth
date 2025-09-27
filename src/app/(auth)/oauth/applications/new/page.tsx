@@ -13,6 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Plus, Trash2, Check } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { DevelopmentRibbon } from '@/components/ui/development-ribbon';
 
 export default function NewApplication() {
   const [name, setName] = useState('');
@@ -234,15 +235,19 @@ export default function NewApplication() {
 
                   {/* Actions */}
                   <div className="flex justify-end gap-3">
-                    <Button variant="outline" asChild>
-                      <Link href="/">Отмена</Link>
-                    </Button>
-                    <Button 
-                      type="submit" 
-                      disabled={createMutation.isPending}
-                    >
-                      {createMutation.isPending ? 'Создание...' : 'Создать приложение'}
-                    </Button>
+                    <DevelopmentRibbon variant="development">
+                      <Button variant="outline" asChild>
+                        <Link href="/">Отмена</Link>
+                      </Button>
+                    </DevelopmentRibbon>
+                    <DevelopmentRibbon variant="development">
+                      <Button 
+                        type="submit" 
+                        disabled={createMutation.isPending}
+                      >
+                        {createMutation.isPending ? 'Создание...' : 'Создать приложение'}
+                      </Button>
+                    </DevelopmentRibbon>
                   </div>
                 </form>
               </CardContent>

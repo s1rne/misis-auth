@@ -64,8 +64,10 @@ const UserSettingsSchema = new Schema<IUserSettings>({
 // (это можно будет использовать в будущем)
 
 // Очищаем кэш модели
-// if (mongoose.models.UserSettings) {
-//   delete mongoose.models.UserSettings;
+if (mongoose.models.UserSettings) {
+  console.log('🗑️ Удаляем модель UserSettings из кэша');
+  delete mongoose.models.UserSettings;
 // }
+}
 
 export default mongoose.model<IUserSettings>('UserSettings', UserSettingsSchema);

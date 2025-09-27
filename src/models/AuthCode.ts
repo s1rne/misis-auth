@@ -56,5 +56,12 @@ AuthCodeSchema.index({ isUsed: 1 });
 // TTL индекс для автоматического удаления истекших кодов
 AuthCodeSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
+// Очищаем кэш модели, чтобы убрать старые middleware
+if (mongoose.models.AuthCode) {
+  console.log('🗑️ Удаляем модель AuthCode из кэша');
+  delete mongoose.models.AuthCode;
+}
+
+// export default mongoose.model<IAuthCode>('AuthCode', AuthCodeSchema);
 
 export default mongoose.models.AuthCode || mongoose.model<IAuthCode>('AuthCode', AuthCodeSchema);

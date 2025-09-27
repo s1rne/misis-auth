@@ -68,8 +68,9 @@ AccessTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 // Токены генерируются в OAuthServer, middleware удален
 
 // Очищаем кэш модели, чтобы убрать старые middleware
-// if (mongoose.models.AccessToken) {
-//   delete mongoose.models.AccessToken;
-// }
+if (mongoose.models.AccessToken) {
+  console.log('🗑️ Удаляем модель AccessToken из кэша');
+  delete mongoose.models.AccessToken;
+}
 
 export default mongoose.model<IAccessToken>('AccessToken', AccessTokenSchema);

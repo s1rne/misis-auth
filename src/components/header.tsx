@@ -12,7 +12,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { User, LogOut, Settings, Menu, X, LayoutDashboard, Key, Plus, FileText } from 'lucide-react';
+import { NotificationsPopup } from '@/components/notifications-popup';
+import { User, LogOut, Settings, Menu, X, LayoutDashboard, Key, Plus, FileText, Bell } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -63,6 +64,9 @@ export function Header() {
           
           <div className="flex items-center space-x-2">
             <ThemeToggle />
+            
+            {/* Уведомления */}
+            <NotificationsPopup />
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

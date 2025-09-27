@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Key, Copy, Eye, EyeOff, AlertTriangle, Code } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
+import { DevelopmentRibbon } from "@/components/ui/development-ribbon"
 
 interface Application {
   id: string
@@ -158,14 +159,16 @@ redirect_uri=${application.redirectUris[0]}`
               <pre className="bg-muted p-4 pr-12 rounded-lg text-sm overflow-x-auto whitespace-pre-wrap break-all">
                 <code>{authUrl}</code>
               </pre>
-              <Button
-                size="sm"
-                variant="outline"
-                className="absolute top-2 right-2 h-8 w-8 p-0"
-                onClick={() => copyToClipboard(authUrl, 'Authorization URL')}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
+              <DevelopmentRibbon variant="development">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="absolute top-2 right-2 h-8 w-8 p-0"
+                  onClick={() => copyToClipboard(authUrl, 'Authorization URL')}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </DevelopmentRibbon>
             </div>
           </div>
 
@@ -175,14 +178,16 @@ redirect_uri=${application.redirectUris[0]}`
               <pre className="bg-muted p-4 pr-12 rounded-lg text-sm overflow-x-auto whitespace-pre-wrap break-all">
                 <code>{tokenRequest}</code>
               </pre>
-              <Button
-                size="sm"
-                variant="outline"
-                className="absolute top-2 right-2 h-8 w-8 p-0"
-                onClick={() => copyToClipboard(tokenRequest, 'Token Request')}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
+              <DevelopmentRibbon variant="development">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="absolute top-2 right-2 h-8 w-8 p-0"
+                  onClick={() => copyToClipboard(tokenRequest, 'Token Request')}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </DevelopmentRibbon>
             </div>
           </div>
 
@@ -193,14 +198,16 @@ redirect_uri=${application.redirectUris[0]}`
                 <code>{`GET /api/v1/user
 Authorization: Bearer access_token`}</code>
               </pre>
-              <Button
-                size="sm"
-                variant="outline"
-                className="absolute top-2 right-2 h-8 w-8 p-0"
-                onClick={() => copyToClipboard('GET /api/v1/user\nAuthorization: Bearer access_token', 'API Request')}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
+              <DevelopmentRibbon variant="development">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="absolute top-2 right-2 h-8 w-8 p-0"
+                  onClick={() => copyToClipboard('GET /api/v1/user\nAuthorization: Bearer access_token', 'API Request')}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </DevelopmentRibbon>
             </div>
           </div>
         </CardContent>

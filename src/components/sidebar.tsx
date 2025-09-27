@@ -10,7 +10,8 @@ import {
   Settings, 
   Key, 
   Users,
-  FileText
+  FileText,
+  Bell
 } from 'lucide-react';
 
 const navigation = [
@@ -28,6 +29,11 @@ const navigation = [
     name: 'Создать приложение',
     href: '/oauth/applications/new',
     icon: Plus,
+  },
+  {
+    name: 'Уведомления',
+    href: '/notifications',
+    icon: Bell,
   },
   {
     name: 'Документация',

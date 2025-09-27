@@ -85,10 +85,10 @@ UserSchema.methods.comparePassword = async function(candidatePassword: string): 
 };
 
 // Очищаем кэш модели, чтобы убрать старые middleware
-// if (mongoose.models.User) {
-//   console.log('🗑️ Удаляем модель User из кэша');
-//   delete mongoose.models.User;
-// }
+if (mongoose.models.User) {
+  console.log('🗑️ Удаляем модель User из кэша');
+  delete mongoose.models.User;
+}
 
 // export default mongoose.model<IUser>('User', UserSchema);
 export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

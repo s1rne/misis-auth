@@ -212,18 +212,22 @@ export default function SettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <a href="/oauth/applications">
-                  <Key className="mr-2 h-4 w-4" />
-                  OAuth Приложения
-                </a>
-              </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <a href="/docs">
-                  <Settings className="mr-2 h-4 w-4" />
-                  Документация
-                </a>
-              </Button>
+              <DevelopmentRibbon variant="development">
+                <Button variant="outline" className="w-full justify-start" asChild>
+                  <a href="/oauth/applications">
+                    <Key className="mr-2 h-4 w-4" />
+                    OAuth Приложения
+                  </a>
+                </Button>
+              </DevelopmentRibbon>
+              <DevelopmentRibbon variant="development">
+                <Button variant="outline" className="w-full justify-start" asChild>
+                  <a href="/docs">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Документация
+                  </a>
+                </Button>
+              </DevelopmentRibbon>
             </CardContent>
           </Card>
 
@@ -234,14 +238,16 @@ export default function SettingsPage() {
               </CardHeader>
               <CardContent className="opacity-60">
                 <div className="space-y-2">
-                  <Button 
-                    variant="destructive" 
-                    className="w-full justify-start cursor-not-allowed"
-                    disabled
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Удалить аккаунт
-                  </Button>
+                  <DevelopmentRibbon variant="development">
+                    <Button 
+                      variant="destructive" 
+                      className="w-full justify-start cursor-not-allowed"
+                      disabled
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Удалить аккаунт
+                    </Button>
+                  </DevelopmentRibbon>
                   <p className="text-xs text-muted-foreground">
                     Это действие необратимо. Все ваши данные будут удалены.
                   </p>

@@ -112,8 +112,9 @@ ApplicationSchema.statics.createWithGeneratedCredentials = async function(data: 
 };
 
 // Очистка кэша модели для перезагрузки схемы
-// if (mongoose.models.Application) {
-//   delete mongoose.models.Application;
-// }
+if (mongoose.models.Application) {
+  console.log('🗑️ Удаляем модель Application из кэша');
+  delete mongoose.models.Application;
+}
 
 export default mongoose.model<IApplication, IApplicationModel>('Application', ApplicationSchema);

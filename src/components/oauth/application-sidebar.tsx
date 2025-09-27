@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog"
+import { DevelopmentRibbon } from "@/components/ui/development-ribbon"
 import { Calendar, Globe, Key, ExternalLink } from "lucide-react"
 import Link from "next/link"
 
@@ -34,19 +35,21 @@ export function ApplicationSidebar({
           <CardTitle>Управление</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Button
-            onClick={onToggleActive}
-            disabled={isUpdating}
-            variant={application.isActive ? "destructive" : "default"}
-            className="w-full"
-          >
-            {isUpdating 
-              ? 'Обновление...' 
-              : application.isActive 
-                ? 'Деактивировать' 
-                : 'Активировать'
-            }
-          </Button>
+          <DevelopmentRibbon variant="development">
+            <Button
+              onClick={onToggleActive}
+              disabled={isUpdating}
+              variant={application.isActive ? "destructive" : "default"}
+              className="w-full"
+            >
+              {isUpdating 
+                ? 'Обновление...' 
+                : application.isActive 
+                  ? 'Деактивировать' 
+                  : 'Активировать'
+              }
+            </Button>
+          </DevelopmentRibbon>
 
           <DeleteConfirmationDialog
             title="Удалить приложение"
@@ -90,18 +93,22 @@ export function ApplicationSidebar({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          <Button variant="outline" className="w-full justify-start" asChild>
-            <Link href="/docs">
-              <ExternalLink className="mr-2 h-4 w-4" />
-              Документация API
-            </Link>
-          </Button>
-          <Button variant="outline" className="w-full justify-start" asChild>
-            <Link href="/oauth/applications">
-              <Key className="mr-2 h-4 w-4" />
-              Все приложения
-            </Link>
-          </Button>
+          <DevelopmentRibbon variant="development">
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link href="/docs">
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Документация API
+              </Link>
+            </Button>
+          </DevelopmentRibbon>
+          <DevelopmentRibbon variant="development">
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link href="/oauth/applications">
+                <Key className="mr-2 h-4 w-4" />
+                Все приложения
+              </Link>
+            </Button>
+          </DevelopmentRibbon>
         </CardContent>
       </Card>
     </div>
