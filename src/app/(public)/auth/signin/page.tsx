@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield, User, Lock, AlertCircle } from 'lucide-react';
+import { Shield, User, Lock, AlertCircle, BookOpen, ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 
 function SignInForm() {
   const [login, setLogin] = useState('');
@@ -55,9 +56,9 @@ function SignInForm() {
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
             <Shield className="h-8 w-8 text-primary" />
           </div>
-          <CardTitle className="text-2xl">Вход в систему</CardTitle>
+          <CardTitle className="text-2xl">MISIS Auth</CardTitle>
           <CardDescription>
-            Используйте ваши учетные данные MISIS
+            Авторизация через личный кабинет НИТУ МИСИС
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -111,17 +112,30 @@ function SignInForm() {
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              Нет аккаунта? Обратитесь к администратору
-            </p>
+          <div className="mt-6 space-y-4">
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">
+                Нет аккаунта? Обратитесь к администратору
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground mb-2">
+                Для разработчиков:
+              </p>
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/docs">
+                  <BookOpen className="mr-2 h-3 w-3" />
+                  Документация API
+                </Link>
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
     </div>
   );
 }
-
 export default function SignIn() {
   return (
     <Suspense fallback={
@@ -131,7 +145,7 @@ export default function SignIn() {
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
               <Shield className="h-8 w-8 text-primary" />
             </div>
-            <CardTitle className="text-2xl">Загрузка...</CardTitle>
+            <CardTitle className="text-2xl">MISIS Auth</CardTitle>
           </CardHeader>
         </Card>
       </div>
@@ -140,3 +154,4 @@ export default function SignIn() {
     </Suspense>
   );
 }
+

@@ -1,7 +1,5 @@
 'use client';
 
-import { Header } from '@/components/header';
-import { Sidebar } from '@/components/sidebar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,10 +12,12 @@ import {
   Shield,
   ExternalLink,
   Copy,
-  Check
+  Check,
+  Home
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import Link from 'next/link';
 
 export default function DocsPage() {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -51,26 +51,31 @@ Content-Type: application/json
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-      
-      <div className="flex">
-        <Sidebar />
-        
-        <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
-          <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
-            {/* Header */}
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 space-y-8">
+        {/* Header Section */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
             <div className="space-y-2">
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-2">
-                <BookOpen className="h-6 w-6 md:h-8 md:w-8" />
+              <h1 className="text-3xl font-bold tracking-tight">
                 Документация API
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-lg">
                 Полное руководство по интеграции с MISIS Auth OAuth сервером
               </p>
             </div>
+            <Button variant="outline" asChild>
+              <Link href="/">
+                <Home className="mr-2 h-4 w-4" />
+                Главная
+              </Link>
+            </Button>
+          </div>
+        </div>
 
-            {/* Overview */}
-            <Card>
+        <div className="space-y-8">
+
+      {/* Overview */}
+      <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Shield className="h-5 w-5" />
@@ -104,8 +109,8 @@ Content-Type: application/json
               </CardContent>
             </Card>
 
-            {/* Getting Started */}
-            <Card>
+      {/* Getting Started */}
+      <Card>
               <CardHeader>
                 <CardTitle>Быстрый старт</CardTitle>
                 <CardDescription>
@@ -154,8 +159,8 @@ Content-Type: application/json
               </CardContent>
             </Card>
 
-            {/* OAuth Flow */}
-            <Card>
+      {/* OAuth Flow */}
+      <Card>
               <CardHeader>
                 <CardTitle>OAuth 2.0 Flow</CardTitle>
                 <CardDescription>
@@ -242,8 +247,8 @@ Content-Type: application/json
               </CardContent>
             </Card>
 
-            {/* API Endpoints */}
-            <Card>
+      {/* API Endpoints */}
+      <Card>
               <CardHeader>
                 <CardTitle>API Endpoints</CardTitle>
                 <CardDescription>
@@ -295,8 +300,8 @@ Content-Type: application/json
               </CardContent>
             </Card>
 
-            {/* Scopes */}
-            <Card>
+      {/* Scopes */}
+      <Card>
               <CardHeader>
                 <CardTitle>Scopes (Разрешения)</CardTitle>
                 <CardDescription>
@@ -348,8 +353,8 @@ Content-Type: application/json
               </CardContent>
             </Card>
 
-            {/* Support */}
-            <Card>
+      {/* Support */}
+      <Card>
               <CardHeader>
                 <CardTitle>Поддержка</CardTitle>
                 <CardDescription>
@@ -379,8 +384,7 @@ Content-Type: application/json
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </main>
+        </div>
       </div>
     </div>
   );

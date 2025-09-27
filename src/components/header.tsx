@@ -155,7 +155,7 @@ export function Header() {
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+                    className="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <IconComponent className="h-5 w-5" />

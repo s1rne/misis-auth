@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc-client';
-import { Header } from '@/components/header';
-import { Sidebar } from '@/components/sidebar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -82,14 +80,7 @@ export default function NewApplication() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-        <Header />
-        
-        <div className="flex">
-          <Sidebar />
-          
-          <main className="flex-1 p-6">
-          <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
             {/* Header */}
             <div className="flex items-center gap-4">
               <Button variant="outline" size="sm" asChild>
@@ -257,8 +248,5 @@ export default function NewApplication() {
               </CardContent>
             </Card>
           </div>
-        </main>
-      </div>
-    </div>
   );
 }
