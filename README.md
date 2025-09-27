@@ -1,36 +1,258 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MISIS Auth - OAuth сервер
 
-## Getting Started
+OAuth сервер для авторизации через MISIS (Московский институт стали и сплавов). Позволяет другим сайтам использовать MISIS как провайдера авторизации.
 
-First, run the development server:
+## Возможности
 
+- 🔐 OAuth 2.0 сервер с поддержкой authorization code flow
+- 🎓 Интеграция с MISIS личным кабинетом
+- 📊 REST API для внешних клиентов
+- 🚀 tRPC для внутреннего API
+- 💾 MongoDB для хранения данных
+- 🎨 Современный UI для управления приложениями
+
+## Технологии
+
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
+- **Backend**: Next.js API Routes, tRPC
+- **База данных**: MongoDB с Mongoose
+- **Аутентификация**: NextAuth.js
+- **OAuth**: Собственная реализация OAuth 2.0
+- **Парсинг**: Axios + Cheerio для MISIS
+
+## Установка
+
+1. Клонируйте репозиторий:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd misis-auth
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Установите зависимости:
+```bash
+pnpm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Настройте переменные окружения:
+```bash
+cp env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Отредактируйте `.env.local`:
+```env
+# MongoDB
+MONGODB_URI=mongodb://localhost:27017/misis-auth
 
-## Learn More
+# NextAuth.js
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key-here
 
-To learn more about Next.js, take a look at the following resources:
+# MISIS
+MISIS_BASE_URL=https://lk.misis.ru
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# OAuth
+OAUTH_CLIENT_SECRET=your-oauth-client-secret-here
+JWT_SECRET=your-jwt-secret-here
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Запустите приложение:
+```bash
+pnpm dev
+```
 
-## Deploy on Vercel
+## API Документация
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### OAuth Endpoints
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#### Authorization Endpoint
+```
+GET /api/oauth/authorize
+```
+
+Параметры:
+- `client_id` - ID OAuth приложения
+- `redirect_uri` - URI для перенаправления
+- `response_type` - Должен быть "code"
+- `scope` - Запрашиваемые разрешения
+- `state` - Случайная строка для защиты от CSRF
+
+#### Token Endpoint
+```
+POST /api/oauth/token
+```
+
+Параметры (form-data):
+- `grant_type` - "authorization_code" или "refresh_token"
+- `client_id` - ID OAuth приложения
+- `client_secret` - Секрет OAuth приложения
+- `code` - Код авторизации (для authorization_code)
+- `refresh_token` - Refresh token (для refresh_token)
+- `redirect_uri` - URI для перенаправления
+
+### REST API
+
+#### User Info
+```
+GET /api/v1/user
+Authorization: Bearer <access_token>
+```
+
+#### User Profile
+```
+GET /api/v1/user/profile
+Authorization: Bearer <access_token>
+```
+
+#### Token Validation
+```
+POST /api/v1/token/validate
+Content-Type: application/json
+
+{
+  "access_token": "<access_token>"
+}
+```
+
+#### OAuth Server Info
+```
+GET /api/v1/oauth/info
+```
+
+### tRPC API
+
+Внутренний API для управления приложениями:
+
+- `auth.getSession` - Получение текущей сессии
+- `auth.getProfile` - Получение профиля пользователя
+- `oauth.createApplication` - Создание OAuth приложения
+- `oauth.getMyApplications` - Получение списка приложений
+- `oauth.updateApplication` - Обновление приложения
+- `oauth.deleteApplication` - Удаление приложения
+
+## Scopes (Разрешения)
+
+- `read` - Базовое чтение данных
+- `profile` - Доступ к профилю пользователя
+- `email` - Доступ к email адресу
+- `misis_data` - Доступ к данным MISIS
+
+## Пример интеграции
+
+### 1. Создание OAuth приложения
+
+1. Войдите в систему
+2. Перейдите в "OAuth Приложения"
+3. Нажмите "Создать приложение"
+4. Заполните данные и получите `client_id` и `client_secret`
+
+### 2. Authorization Flow
+
+```javascript
+// 1. Перенаправление пользователя на авторизацию
+const authUrl = `https://your-misis-auth.com/api/oauth/authorize?` +
+  `client_id=${CLIENT_ID}&` +
+  `redirect_uri=${encodeURIComponent(REDIRECT_URI)}&` +
+  `response_type=code&` +
+  `scope=read profile&` +
+  `state=${randomState}`;
+
+window.location.href = authUrl;
+```
+
+### 3. Обмен кода на токен
+
+```javascript
+// 2. Обмен кода на токен
+const response = await fetch('https://your-misis-auth.com/api/oauth/token', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  },
+  body: new URLSearchParams({
+    grant_type: 'authorization_code',
+    client_id: CLIENT_ID,
+    client_secret: CLIENT_SECRET,
+    code: authorizationCode,
+    redirect_uri: REDIRECT_URI,
+  }),
+});
+
+const tokenData = await response.json();
+// { access_token, token_type, expires_in, refresh_token, scope }
+```
+
+### 4. Использование токена
+
+```javascript
+// 3. Получение данных пользователя
+const userResponse = await fetch('https://your-misis-auth.com/api/v1/user', {
+  headers: {
+    'Authorization': `Bearer ${tokenData.access_token}`,
+  },
+});
+
+const userData = await userResponse.json();
+// { id, email, misisLogin, profile: { fullName, group, faculty, ... } }
+```
+
+## Структура проекта
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── api/               # API Routes
+│   │   ├── auth/          # NextAuth.js
+│   │   ├── oauth/         # OAuth endpoints
+│   │   ├── trpc/          # tRPC
+│   │   └── v1/            # REST API v1
+│   ├── auth/              # Страницы аутентификации
+│   ├── oauth/             # OAuth управление
+│   └── page.tsx           # Главная страница
+├── components/            # React компоненты
+├── lib/                   # Утилиты и конфигурация
+│   ├── auth.ts            # NextAuth.js конфигурация
+│   ├── mongodb.ts         # MongoDB подключение
+│   ├── oauth.ts           # OAuth сервер
+│   ├── trpc.ts            # tRPC конфигурация
+│   └── misis-client.ts    # MISIS парсер
+├── models/                # Mongoose модели
+├── server/                # tRPC роутеры
+└── types/                 # TypeScript типы
+```
+
+## Разработка
+
+### Запуск в режиме разработки
+
+```bash
+pnpm dev
+```
+
+### Сборка для продакшена
+
+```bash
+pnpm build
+pnpm start
+```
+
+### Линтинг
+
+```bash
+pnpm lint
+```
+
+## Безопасность
+
+- Все пароли хешируются с помощью bcrypt
+- JWT токены подписываются секретным ключом
+- OAuth токены имеют ограниченное время жизни
+- Валидация всех входящих данных
+- Защита от CSRF атак
+
+## Лицензия
+
+MIT License
+
+## Поддержка
+
+Для вопросов и предложений создавайте issues в репозитории.
