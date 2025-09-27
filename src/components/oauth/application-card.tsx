@@ -24,47 +24,46 @@ interface ApplicationCardProps {
 
 export const ApplicationCard = memo(function ApplicationCard({ application, onToggleActive, isUpdating }: ApplicationCardProps) {
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg hover:bg-muted/50 hover:shadow-md transition-all duration-300 gap-4 group">
-      <div className="flex items-center gap-4 flex-1 min-w-0 w-full sm:w-auto">
-        <div className="flex-shrink-0">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-            <Key className="h-5 w-5 text-primary group-hover:scale-110 transition-transform duration-300" />
-          </div>
+    <div className="p-3 border rounded-lg hover:bg-muted/50 transition-colors">
+      {/* Заголовок с названием и статусом */}
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <Key className="h-4 w-4 text-primary flex-shrink-0" />
+          <h3 className="font-medium truncate">{application.name}</h3>
         </div>
-        
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-            <h3 className="font-medium truncate">{application.name}</h3>
-            <Badge variant={application.isActive ? "default" : "secondary"} className="w-fit">
-              {application.isActive ? 'Активно' : 'Неактивно'}
-            </Badge>
-          </div>
-          {application.description && (
-            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-              {application.description}
-            </p>
-          )}
-          <div className="mt-2 text-xs text-muted-foreground font-mono break-all">
-            Client ID: {application.clientId}
-          </div>
-        </div>
+        <Badge variant={application.isActive ? "default" : "secondary"} className="text-xs">
+          {application.isActive ? 'Активно' : 'Неактивно'}
+        </Badge>
       </div>
       
-      <div className="flex items-center gap-2 w-full sm:w-auto">
+      {/* Описание */}
+      {application.description && (
+        <p className="text-sm text-muted-foreground mb-2 line-clamp-1">
+          {application.description}
+        </p>
+      )}
+      
+      {/* Client ID */}
+      <div className="text-xs text-muted-foreground font-mono truncate mb-3">
+        {application.clientId}
+      </div>
+      
+      {/* Кнопки */}
+      <div className="flex gap-2">
         {onToggleActive && (
           <Button 
             variant="outline" 
             size="sm" 
             onClick={() => onToggleActive(application.id, application.isActive)}
             disabled={isUpdating}
-            className="flex-1 sm:flex-none"
+            className="flex-1 sm:flex-none text-xs sm:text-sm"
           >
             {application.isActive ? 'Деактивировать' : 'Активировать'}
           </Button>
         )}
-        <Button variant="outline" size="sm" asChild>
+        <Button variant="outline" size="sm" asChild className="px-3">
           <Link href={`/oauth/applications/${application.id}`}>
-            <ExternalLink className="h-4 w-4" />
+            <ExternalLink className="h-3 w-3" />
           </Link>
         </Button>
       </div>
