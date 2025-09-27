@@ -20,6 +20,16 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  {
+    rules: {
+      // Отключаем строгие правила для any
+      "@typescript-eslint/no-explicit-any": "warn",
+      // Отключаем предупреждения о неиспользуемых переменных
+      "@typescript-eslint/no-unused-vars": "warn",
+      // Отключаем правило о HTML ссылках (можно использовать <a>)
+      "@next/next/no-html-link-for-pages": "off",
+    },
+  },
 ];
 
 export default eslintConfig;

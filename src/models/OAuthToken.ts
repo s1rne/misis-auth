@@ -56,11 +56,10 @@ const OAuthTokenSchema = new Schema<IOAuthToken>({
 });
 
 // Индексы для быстрого поиска
-// OAuthTokenSchema.index({ accessToken: 1 });
-// OAuthTokenSchema.index({ refreshToken: 1 });
+// OAuthTokenSchema.index({ accessToken: 1 }); // unique: true уже создает индекс
+// OAuthTokenSchema.index({ refreshToken: 1 }); // unique: true уже создает индекс
 OAuthTokenSchema.index({ userId: 1 });
 OAuthTokenSchema.index({ clientId: 1 });
-OAuthTokenSchema.index({ expiresAt: 1 });
 // OAuthTokenSchema.index({ isRevoked: 1 });
 
 // TTL индекс для автоматического удаления истекших токенов

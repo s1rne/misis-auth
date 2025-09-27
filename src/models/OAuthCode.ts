@@ -49,10 +49,8 @@ const OAuthCodeSchema = new Schema<IOAuthCode>({
 });
 
 // Индексы
-OAuthCodeSchema.index({ code: 1 });
 OAuthCodeSchema.index({ userId: 1 });
 OAuthCodeSchema.index({ clientId: 1 });
-OAuthCodeSchema.index({ expiresAt: 1 });
 OAuthCodeSchema.index({ isUsed: 1 });
 
 // TTL индекс для автоматического удаления истекших кодов
